@@ -125,40 +125,7 @@ def create_choropleth_map(gdf):
     )
 
     return fig
-def create_histogram(gdf):
-    # Example: Histogram of Land Ratios
-    fig_hist = px.histogram(
-        gdf,
-        x='land_ratio',
-        nbins=50,
-        title="Histogram of Land Ratios",
-        labels={'land_ratio': 'Land Ratio', 'count': 'Number of Districts'},
-        color_discrete_sequence=['green']
-    )
-    fig_hist.update_layout(
-        xaxis_title="Land Ratio",
-        yaxis_title="Number of Districts"
-    )
-    return fig_hist
 
-def create_scatter_plot(gdf):
-    # Example: Scatter Plot of ALAND vs. AWATER
-    fig_scatter = px.scatter(
-        gdf,
-        x='ALAND',
-        y='AWATER',
-        size='land_ratio',
-        color='land_ratio',
-        hover_data=['GEOID'],
-        title="Scatter Plot of Land Area vs. Water Area",
-        labels={'ALAND': 'Land Area (Square Meters)', 'AWATER': 'Water Area (Square Meters)'},
-        color_continuous_scale='Blues'
-    )
-    fig_scatter.update_layout(
-        xaxis_title="Land Area (Square Meters)",
-        yaxis_title="Water Area (Square Meters)"
-    )
-    return fig_scatter
 
 # ----------------------------
 # Main Streamlit App
@@ -187,55 +154,22 @@ def main():
     with st.spinner("Loading and processing data..."):
         gdf = load_data(shapefile_path)
 
-    # Create tabs
-    tabs = st.tabs(["Choropleth Map", "Histogram", "Scatter Plot"])
+    # Add description and explanation
+    st.markdown("""
+    ## Land-to-Water Ratio Analysis of US Congressional Districts
 
-    # ----------------------------
-    # Tab 1: Choropleth Map
-    # ----------------------------
-    with tabs[0]:
-        st.header("Land-to-Water Ratio Choropleth Map")
-        st.markdown("""
-        This map visualizes the land-to-water ratio of US congressional districts. 
-        **Green** indicates a higher proportion of land, while **blue** signifies a greater presence of water bodies.
-        """)
+    This visualization explores the land-to-water ratio across different US congressional districts. 
+    - **Green** indicates a higher proportion of land
+    - **Blue** signifies a greater presence of water bodies
 
-        fig = create_choropleth_map(gdf)
+    The map provides insights into the geographical characteristics of congressional districts.
+    """)
 
-        st.plotly_chart(fig, use_container_width=True)
+    # Create the choropleth map
+    fig = create_choropleth_map(gdf)
 
-    # ----------------------------
-    # Tab 2: Histogram
-    # ----------------------------
-    with tabs[1]:
-        st.header("Distribution of Land Ratios")
-        st.markdown("""
-        The histogram below shows the distribution of land-to-water ratios across all congressional districts.
-        """)
-
-        fig_hist = create_histogram(gdf)
-
-        st.plotly_chart(fig_hist, use_container_width=True)
-
-    # ----------------------------
-    # Tab 3: Scatter Plot
-    # ----------------------------
-    with tabs[2]:
-        st.header("Land Area vs. Water Area")
-        st.markdown("""
-        The scatter plot illustrates the relationship between land area and water area for each congressional district. 
-        The size and color of each point represent the land-to-water ratio.
-        """)
-
-        fig_scatter = create_scatter_plot(gdf)
-
-        st.plotly_chart(fig_scatter, use_container_width=True)
-
-    # ----------------------------
-    # Footer
-    # ----------------------------
-    st.markdown("---")
-    st.markdown("© 2024 Your Name. All rights reserved.")
+    # Display the map
+    st.plotly_chart(fig, use_container_width=True)
 
 if __name__ == "__main__":
     main()
