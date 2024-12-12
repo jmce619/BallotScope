@@ -52,42 +52,40 @@ def load_data(shapefile_path):
     geo_df['filter1'] = geo_df['STATEFP'].astype(int)
     geo_df = geo_df[geo_df['filter1']<57]
 
-    # Make a copy for processing
-    gdf = geo_df.copy()
 
     # Identify Alaska rows using the FIPS code '02'
     alaska_fips = '02'
-    is_alaska = gdf['STATEFP'] == alaska_fips
+    is_alaska = geo_df['STATEFP'] == alaska_fips
     st.write(f"**Number of Alaska records before modification:** {is_alaska.sum()}")
 
     # Extract the largest polygon for Alaska geometries
-    gdf.loc[is_alaska, 'geometry'] = gdf.loc[is_alaska, 'geometry'].apply(get_largest_polygon)
+    geo_df.loc[is_alaska, 'geometry'] = geo_df.loc[is_alaska, 'geometry'].apply(get_largest_polygon)
 
     # Remove any Alaska rows where geometry is None (if any)
-    gdf = gdf[~(is_alaska & gdf['geometry'].isnull())].copy()
+    geo_df = geo_df[~(is_alaska & geo_df['geometry'].isnull())].copy()
 
     # Reset index for cleanliness
-    gdf.reset_index(drop=True, inplace=True)
-    st.write(f"**Number of Alaska records after modification:** {(gdf['STATEFP'] == alaska_fips).sum()}")
+    geo_df.reset_index(drop=True, inplace=True)
+    st.write(f"**Number of Alaska records after modification:** {(geo_df['STATEFP'] == alaska_fips).sum()}")
 
     # Reproject to WGS84 (EPSG:4326)
-    gdf = gdf.to_crs(epsg=4326)
-    st.write(f"**GeoDataFrame CRS after projection:** {gdf.crs}")
+    geo_df = geo_df.to_crs(epsg=4326)
+    st.write(f"**GeoDataFrame CRS after projection:** {geo_df.crs}")
 
     # Calculate the land ratio: ALAND / (ALAND + AWATER)
-    gdf['land_ratio'] = gdf['ALAND'] / (gdf['ALAND'] + gdf['AWATER'])
+    geo_df['land_ratio'] = geo_df['ALAND'] / (geo_df['ALAND'] + geo_df['AWATER'])
 
     # Handle potential division by zero (if ALAND + AWATER is zero)
-    gdf['land_ratio'] = gdf['land_ratio'].fillna(0)
+    geo_df['land_ratio'] = geo_df['land_ratio'].fillna(0)
 
-    return gdf
+    return geo_df
 
 # ----------------------------
 # Create Choropleth Map
 # ----------------------------
-def create_choropleth_map(gdf):
+def create_choropleth_map(geo_df):
     # Convert GeoDataFrame to GeoJSON
-    geojson = json.loads(gdf.to_json())
+    geojson = json.loads(geo_df.to_json())
 
     # Define a custom color scale that emphasizes blue
     custom_color_scale = [
@@ -98,9 +96,9 @@ def create_choropleth_map(gdf):
 
     # Create the choropleth map using Plotly Express
     fig = px.choropleth(
-        gdf,
+        geo_df,
         geojson=geojson,
-        locations='GEOID',                # Column in gdf that matches 'id' in geojson
+        locations='GEOID',                # Column in geo_df that matches 'id' in geojson
         color='land_ratio',               # Column to set color
         color_continuous_scale=custom_color_scale,
         range_color=(0, 1),
@@ -150,12 +148,12 @@ def main():
 
     # Load and process the data
     with st.spinner("Loading and processing data..."):
-        gdf = load_data(shapefile_path)
+        geo_df = load_data(shapefile_path)
 
    
 
     # Create the choropleth map
-    fig = create_choropleth_map(gdf)
+    fig = create_choropleth_map(geo_df)
 
     # Display the map
     st.plotly_chart(fig, use_container_width=True)
