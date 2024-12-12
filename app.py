@@ -4,16 +4,28 @@ from shapely.geometry import Polygon, MultiPolygon
 import plotly.express as px
 import json
 import os
-st.markdown("""
-    <style>
-    .reportview-container {
-        background: white;
-    }
-    .main {
-        background-color: white;
-    }
-    </style>
-    """, unsafe_allow_html=True)
+
+def set_custom_style():
+    """
+    Apply custom CSS styles for a minimalist design.
+    """
+    st.markdown(
+        """
+        <style>
+       
+
+
+        /* Set app background color to white */
+        .stApp {
+            background-color: #FFFFFF;
+        }
+
+     
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+
 # ----------------------------
 # Function to Extract Largest Polygon
 # ----------------------------
@@ -134,6 +146,8 @@ def create_choropleth_map(geo_df):
 # Main Streamlit App
 # ----------------------------
 def main():
+    
+    def set_custom_style()
 
     st.title("US Congressional Districts Visualization")
 
@@ -166,3 +180,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+
