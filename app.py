@@ -119,9 +119,7 @@ def create_choropleth_map(gdf):
             showcoastlines=False,
             projection_type='albers usa'    # Albers projection for USA
         ),
-        coloraxis_colorbar=dict(
-            title="Land Ratio<br>(Green=More Land, Blue=More Water)"
-        )
+
     )
 
     return fig
@@ -154,16 +152,7 @@ def main():
     with st.spinner("Loading and processing data..."):
         gdf = load_data(shapefile_path)
 
-    # Add description and explanation
-    st.markdown("""
-    ## Land-to-Water Ratio Analysis of US Congressional Districts
-
-    This visualization explores the land-to-water ratio across different US congressional districts. 
-    - **Green** indicates a higher proportion of land
-    - **Blue** signifies a greater presence of water bodies
-
-    The map provides insights into the geographical characteristics of congressional districts.
-    """)
+   
 
     # Create the choropleth map
     fig = create_choropleth_map(gdf)
