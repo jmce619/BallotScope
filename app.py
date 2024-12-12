@@ -56,7 +56,6 @@ def load_data(shapefile_path):
     # Identify Alaska rows using the FIPS code '02'
     alaska_fips = '02'
     is_alaska = geo_df['STATEFP'] == alaska_fips
-    st.write(f"**Number of Alaska records before modification:** {is_alaska.sum()}")
 
     # Extract the largest polygon for Alaska geometries
     geo_df.loc[is_alaska, 'geometry'] = geo_df.loc[is_alaska, 'geometry'].apply(get_largest_polygon)
@@ -66,7 +65,6 @@ def load_data(shapefile_path):
 
     # Reset index for cleanliness
     geo_df.reset_index(drop=True, inplace=True)
-    st.write(f"**Number of Alaska records after modification:** {(geo_df['STATEFP'] == alaska_fips).sum()}")
 
     # Reproject to WGS84 (EPSG:4326)
     #geo_df = geo_df.to_crs(epsg=4326)
