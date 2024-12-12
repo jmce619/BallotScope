@@ -134,7 +134,6 @@ def create_choropleth_map(geo_df):
 # Main Streamlit App
 # ----------------------------
 def main():
-    st.set_page_config(page_title="US Congressional Districts Visualization", layout="wide")
 
     st.title("US Congressional Districts Visualization")
 
