@@ -147,7 +147,7 @@ def create_choropleth_map(geo_df):
 # ----------------------------
 def main():
     
-    def set_custom_style()
+    set_custom_style()
 
     st.title("US Congressional Districts Visualization")
 
