@@ -69,7 +69,7 @@ def load_data(shapefile_path):
     st.write(f"**Number of Alaska records after modification:** {(geo_df['STATEFP'] == alaska_fips).sum()}")
 
     # Reproject to WGS84 (EPSG:4326)
-    geo_df = geo_df.to_crs(epsg=4326)
+    #geo_df = geo_df.to_crs(epsg=4326)
     st.write(f"**GeoDataFrame CRS after projection:** {geo_df.crs}")
 
     # Calculate the land ratio: ALAND / (ALAND + AWATER)
