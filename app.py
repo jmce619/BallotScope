@@ -4,7 +4,16 @@ from shapely.geometry import Polygon, MultiPolygon
 import plotly.express as px
 import json
 import os
-
+st.markdown("""
+    <style>
+    .reportview-container {
+        background: white;
+    }
+    .main {
+        background-color: white;
+    }
+    </style>
+    """, unsafe_allow_html=True)
 # ----------------------------
 # Function to Extract Largest Polygon
 # ----------------------------
